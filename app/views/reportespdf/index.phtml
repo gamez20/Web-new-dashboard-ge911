@@ -1,0 +1,67 @@
+<style>
+    #btn_see_pdf {
+        background: url("<?= PAYCORES_HOST_NAME ?>img/buttons/see_pdf.png");
+        background-size: cover;
+        padding::50px;
+        transition: 300ms;
+    }
+    #btn_see_pdf:hover {
+        background: url("<?= PAYCORES_HOST_NAME ?>img/buttons/see_pdf_neon.png");
+        background-size: cover;
+    }
+</style>
+<div class="col-md-3 push-50-top">
+<a href="#" class="col-xs-12 push-30-top" onclick="showHint('reportUserActive')">
+    <div class="col-md-1"> <img src="<?= PAYCORES_HOST_NAME ?>img/buttons/btn_gex100.gif" alt="" width="100px" class="opacity-3 absolute"> </div>
+    <div class="col-md-10 text-white text-shadow h3 push-15-top">Usuarios activos </div>
+</a>
+<a href="#" class="col-xs-12 push-30-top" onclick="showHint('reportUserBlock')">
+    <div class="col-md-1"> <img src="<?= PAYCORES_HOST_NAME ?>img/buttons/btn_gex100.gif" alt="" width="100px" class="opacity-3 absolute"> </div>
+    <div class="col-md-10 text-white text-shadow h3 push-15-top">Usuarios bloqueados </div>
+</a>
+<a href="#" class="col-xs-12 push-30-top" onclick="showHint('reportEmergencyByDay')">
+    <div class="col-md-1"> <img src="<?= PAYCORES_HOST_NAME ?>img/buttons/btn_gex100.gif" alt="" width="100px" class="opacity-3 absolute"> </div>
+    <div class="col-md-10 text-white text-shadow h3 push-15-top">Emergencias por día </div>
+</a>
+</div>
+
+
+
+<div class="col-md-6 remove-padding center">
+    <img src="<?= PAYCORES_HOST_NAME ?>img/buttons/center_ge3.gif" alt="" class="opacity-3 absolute col-xs-12">
+    <div id="pdf_generate" class="font-s12 push-100-top">
+        <div class="col-xs-12 center push-100-top text-white">
+            Cada que de click a una opción se generará un archivo nuevo en PDF que será guardado en "GE911/reportes/(mes)/(archivo generado).pdf"
+        </div>
+    </div>
+</div>
+
+
+
+<div class="col-md-3 pull-right push-50-top">
+    <a href="#" class="col-xs-12 push-30-top" onclick="showHint('reportEmergencyByAdmin')">
+        <div class="col-md-1">
+            <img src="<?= PAYCORES_HOST_NAME ?>img/buttons/btn_gex100.gif" alt="" width="100px" class="opacity-3 absolute">
+        </div>
+        <div class="col-md-11 text-white text-shadow h3 push-15-top">Emergencia por administrador</div>
+    </a>
+
+    <a href="#" class="col-xs-12 push-30-top" onclick="showHint('reportForces')">
+        <div class="col-md-1">
+            <img src="<?= PAYCORES_HOST_NAME ?>img/buttons/btn_gex100.gif" alt="" width="100px" class="opacity-3 absolute">
+        </div>
+        <div class="col-md-11 text-white text-shadow h3 push-15-top">Fuerzas</div>
+    </a>
+</div>
+<script>
+    function showHint(str) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("pdf_generate").innerHTML = this.responseText;
+            }
+        };
+        xmlhttp.open("GET", "<?= PAYCORES_HOST_NAME ?>reportespdf/" + str, true);
+        xmlhttp.send();
+    }
+</script>

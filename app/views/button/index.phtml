@@ -1,0 +1,286 @@
+<!-- link calendar resources -->
+<link rel="stylesheet" type="text/css" href="public/css/tcal.css"/>
+<style type="text/css">
+
+    .comments-list .comment-box {
+        width: 320px;
+        /* position: relative; */
+        -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+        -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 9px 11px rgba(0, 0, 0, 0.15);
+        margin-top: 17px;
+    }
+
+    .comment-box .comment-name {
+        color: #f0f0f1;
+        font-size: 14px;
+        font-weight: 700;
+        float: left;
+        margin-right: 10px;
+    }
+
+    .mains {
+        width: 25%;
+        float: left;
+        padding: 15px;
+    }
+
+    .comment-box .comment-head {
+        /* background: #C0B6B6; */
+        background: #FBECEEB3;
+        padding: 15px 12px;
+        border-bottom: 1px solid #E5E5E5;
+        overflow: hidden;
+        -webkit-border-radius: 4px 4px 0 0;
+        -moz-border-radius: 4px 4px 0 0;
+        border-radius: 4px 4px 0 0;
+        width: 500px;
+    }
+
+    * {
+        color: #08127A;
+    }
+
+    .comment-box .comment-content {
+        background: #FFF;
+        color: #08127A;
+        opacity: 1.5;
+        padding: 12px;
+        font-size: 15px;
+        -webkit-border-radius: 0 0 4px 4px;
+        -moz-border-radius: 0 0 4px 4px;
+        border-radius: 0 0 4px 4px;
+    }
+
+    div.scroll_vertical {
+        height: 642px;
+        width: 627px;
+        overflow: auto;
+        /* border: 1px solid #000; */
+        background-color: transparent;
+        /* padding: 8px; */
+        opacity: 0.9;
+    }
+
+    .giraleft {
+        animation-name: giraleft;
+        animation-duration: 60s;
+        animation-iteration-count: infinite;
+    }
+
+    .giraright {
+        animation-name: giraright;
+        animation-duration: 60s;
+        animation-iteration-count: infinite;
+    }
+
+    .giraspeed {
+        animation-name: giraspeed;
+        animation-duration: 40s;
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes giraleft {
+        from {
+            transform: rotate3d(0, 0, 1, 0deg);
+        }
+        to {
+            transform: rotate3d(0, 0, 1, -720deg);
+        }
+    }
+
+    @keyframes giraright {
+        from {
+            transform: rotate3d(0, 0, 1, 0deg);
+        }
+        to {
+            transform: rotate3d(0, 0, 1, 720deg);
+        }
+    }
+</style>
+<div class="col-xs-12">
+    <div class="col-xs-12 bg-black heightx100 opacity-8 absolute shadow-3"></div>
+    <div class="col-xs-12 padding-20 text-white">
+        <div class="col-md-4"><b>Name:</b><?php echo $name; ?></div>
+        <div class="col-md-4"><b>Location:</b><?php echo $resume; ?></div>
+        <div class="col-md-4"><b>Phone:</b><?php echo $detail; ?></div>
+    </div>
+</div>
+
+<div class="col-xs-12 push-50-top">
+    <input type="checkbox" id="botoncheckbox" class="hidden" checked>
+    <div class="col-xs-2 text-white height-200 pointer">
+        <img src="<?= PAYCORES_HOST_NAME ?>img/buttons/dimension.png" alt="" class="absolute col-xs-12">
+        <img onclick="change();" src="<?= PAYCORES_HOST_NAME ?>img/jarvi_img/circle_net_1.png" id="jarvi_check"
+             class="opacity-8 giraright absolute col-xs-12">
+
+        <script>
+            function change() {
+                checkbox = document.getElementById('botoncheckbox');
+                checkbox.click();
+                if (checkbox.checked) {
+                    document.getElementById('jarvi_check').className = 'opacity-8 giraleft absolute col-xs-12';
+                    document.getElementById('button_tips').className = ' col-xs-6 remove-padding text-white animated rotateInUpLeft';
+                    document.getElementById('button_1').className = 'hidden';
+                }
+                else {
+                    document.getElementById('jarvi_check').className = 'opacity-8 giraright absolute col-xs-12';
+                    document.getElementById('button_1').className = ' col-xs-6 remove-padding text-white animated rotateInUpLeft';
+                    document.getElementById('button_tips').className = 'hidden';
+                }
+            }
+        </script>
+    </div>
+    <div class="col-md-9">
+        <div class="hidden" id="button_1">
+            <?php
+            echo $this->tag->form(
+                array(
+                    "action" => "tip",
+                    "id" => "loginForm", "method" => "post", "name" => "loginForm", "enctype" => "multipart/form-data", "onsubmit" => "PostTips"
+                )
+            );
+            ?>
+            <div class="absolute opacity-8 bg-black shadow-4 col-xs-12 heightx100"></div>
+            <div class="col-xs-12 padding-20">
+                <div class="col-xs-12 push-20-top">
+                    <input type="text" placeholder="Nombre botón" name="name" required class="input-ge" id="name">
+                </div>
+                <div class="col-xs-12 push-20-top">
+                    <select name="name" required class="input-ge" id="name">
+                        <option>Tipo de botón</option>
+                        <option value="Premium">Premium</option>
+                        <option value="Free">Free</option>
+                    </select>
+                </div>
+
+                <div class="col-xs-12 form-group push-20-top">
+                    <label for="mail">Archivo</label>
+                    <input type="file" name="archivo" value="archivo" id="archivo"
+                           onchange="ValidarImagenBoton(this);"/>
+                </div>
+
+                <div class="col-xs-12">
+                    <button type="submit" value="subir" name="subir" class="btn-outline push-30-bottom">Subir botón
+                    </button>
+                </div>
+
+                </form>
+            </div>
+        </div>
+        <div class="col-xs-6 remove-padding text-white animated rotateInUpLeft" id="button_tips">
+            <?php
+            echo $this->tag->form(
+                array(
+                    "action" => "tip/addTip", "method" => "post", "id" => "form"
+                )
+            );
+            ?>
+            <div class="absolute opacity-8 bg-black shadow-4 col-xs-12 heightx100"></div>
+            <div class="padding-20 text-white">
+                <div class="col-xs-12 push-20-top">
+                    <input type="text" placeholder="Titulo Tip" name="name" required class="input-ge" id="titulotip">
+                </div>
+                <div class="col-xs-12">
+                <textarea placeholder="Descripción" name="resume" required class="input-ge"
+                          id="descripciontip"></textarea>
+                </div>
+
+                <div class="col-xs-12 form-group push-20-top">
+                    <label for="mail">Archivo</label>
+                    <input type="file" name="archivo2" value="archivo2" id="archivo2" "/>
+                </div>
+
+                <div class="col-xs-12 push-30-bottom">
+                    <button type="submit" value="subirtip" name="subirtip" class="btn-outline">Guardar tip</button>
+                </div>
+            </div>
+            </form>
+        </div>
+        <div class="col-md-5 animated fadeInUp">
+            <div class="bg-black padding-20 opacity-8 shadow-3 absolute heightx100 col-xs-12 "></div>
+            <div class="col-xs-12 padding-20">
+                <div class="col-xs-12">
+                    <input type="text" placeholder="Id noticia" name="name" required class="input-ge" id="idNoticia">
+                </div>
+                <div class="col-xs-12 form-group">
+                    <select id="topic" name="Topic" class="input-ge">
+                        <option value="Fuerzas">Fuerzas</option>
+                        <option value="Usuarios">Usuarios</option>
+                    </select>
+                </div>
+                <div class="col-xs-12">
+                    <button type="submit" value="" name="btn-outline" class="btn-outline"
+                            onclick="sendNoticia($('#idNoticia').val(), $('#topic').val());">Enviar noticia
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="test" class="menu col-md-4 push-30-top animated fadeInUp">
+            <div class="bg-black padding-20 opacity-8 shadow-3 absolute heightx100 col-xs-12"></div>
+
+            <div class=" col-xs-12" id="www">
+                <div class="comments-container" style="margin-top:30px;margin-left:10px;width: 400px;" id="hhh">
+                    <ul id="comments-list" class="comments-list">
+                        <div id="resultado" class="text-white col-xs-12 padding-10"></div>
+                    </ul>
+                </div>
+            </div>
+        </div> <!--cierro menu -->
+    </div>
+
+    <div class="col-xs-12">
+        <?php if (isset($dataSearch)) { ?>
+            <?php if (count($dataSearch) > 0) { ?>
+                <?php for ($i = 0; $i < count($dataSearch); $i++) { ?>
+                    <div class="col-md-2">
+                        <img src="<?= PAYCORES_HOST_NAME ?>img/buttons/btn_ge1_infinite.gif" class="col-xs-12 absolute">
+                        <div class="col-xs-12 push-20-top shadow-4 text-white">
+                            <div class="bg-black opacity-8 shadow-3 absolute heightx100 col-xs-12"></div>
+                            <span class="padding-10 rounded bg-blue absolute"><?php echo $dataSearch[$i]['idtip']; ?></span>
+                            <div class="col-xs-12 padding-20">
+                                <div class="col-xs-12 remove-padding center">
+
+                                        <?php echo $dataSearch[$i]['name']; ?>
+                                </div>
+                                <div class="col-xs-12 center">
+                                    <?php echo $dataSearch[$i]['resume']; ?>
+                                </div>
+                                <div class="col-xs-12 center">
+                                    <?php echo $dataSearch[$i]['detail']; ?>
+                                </div>
+                                <?php
+                                echo $this->tag->form(
+                                    array(
+                                        "action" => "tip/deleteTipById", "method" => "post", "id" => "form"
+                                    )
+                                ); ?>
+                                <input type="hidden" class="form-control" name="idtip" id="idtip"
+                                       value="<?php echo $dataSearch[$i]['idtip']; ?>"/>
+                                <div class="col-md-2 center">
+                                    <button type="submit" class="btn btn-primary rounded">Eliminar Tip</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <?php }; ?>
+            <?php } ?>
+        <?php } ?>
+    </div>
+    <script>
+        function sendNoticia(idNoticia, topic) {
+            $.ajax({
+                url: '<?= PAYCORES_HOST_NAME ?>/push/sendPushNotice/' + idNoticia + '/' + topic,
+                type: 'get',
+                beforeSend: function () {
+                    $("#resultado").html("Procesando, espere por favor...");
+                },
+                success: function (response) {
+                    $("#resultado").html(response);
+                }
+            });
+        }
+    </script>
+    <!--open menu-->
+</div>

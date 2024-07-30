@@ -1,0 +1,201 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <!--boostrap-->
+   <!-- <script type="text/javascript" src="public/js/214.jquery.min.js"> </script>-->
+
+
+    <title>Modificar Noticia</title>
+</head>
+
+<body onload="manejoAjax();" background="public/img/map.jpg">
+
+<table width="600" border="0" cellpadding="0" cellspacing="0" height="80">
+    <tr>
+        <td>
+           <h2 align="center" style="margin-top: 0; margin-bottom: 0 color:green">Enviar Mensaje </h2>
+        </td>
+    <td>
+        <a href="<?= PAYCORES_HOST_NAME ?>principal">Inicio</a>
+    </td></tr>
+</table>
+
+<div align="center">
+
+    <table width="600" border="0" cellpadding="0" cellspacing="0">
+
+        <tr>
+            <td width="100%">
+
+                <table width="100%" border=1 cellPadding=5 cellSpacing=0 bgcolor="#eeeeee" bordercolor="#C0C0C0">
+
+                    <tbody>
+
+                    <tr>
+                        <td width="100%" align="center" vAlign=middle>
+                            <?php
+                            echo $this->tag->form(array(
+                             "action" => "noticias/addNoticias", "id" => "noticia", "method" => "post", "name" => "noticia", "enctype" => "multipart/form-data", "onsubmit" =>"Modificar"
+                                )
+                            );
+                            ?>
+
+
+                                <!--begin Form -->
+                                <table border=0 cellpadding=3 cellspacing=0 bordercolor="#FFFFFF">
+
+                                    <tr>
+                                        <td colspan=2 height="20" align="left">
+                                            <b>Rellena los  siguientes campos</b></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="2" height="20" bgcolor="#CCCCCC" align="left">Nombre Noticia:</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="2" align="center" height="28">
+                                            <INPUT NAME="nombre" TYPE="TEXT" SIZE="30" MAXLENGTH="68"  id="nombre" ></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="2" height="20" bgcolor="#CCCCCC" align="left">Resumen Noticia:</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="2" align="center" height="28">
+                                            <INPUT NAME="resumen" TYPE="TEXT" SIZE="30" MAXLENGTH="68" id="resumen" readonly ></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="2" height="20" bgcolor="#CCCCCC" align="left">Detalle:</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="2" align="center" height="80">
+                                            <TEXTAREA ROWS="10" COLS="64"  NAME="bodyl" id="detalle" required></TEXTAREA></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td width="100%" align="CENTER" COLSPAN="2">
+                                            <input type="submit" id="envio" name="envio" value="Enviar" size="20">&nbsp;&nbsp;
+                                            <input name="reset" type="reset" value="Limpiar" size="20"></td>
+                                    </tr>
+
+                                </table>
+
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+
+                                </table>
+                                <!-- End Form -->
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+<script type="text/javascript">
+
+    function manejoAjax()
+    {
+
+
+        var id="<?php echo $_GET['codigo']?>";
+        console.log(id);
+        var cadena='http://52.33.23.118:3354/api/tips/';
+        cadena+=id;
+
+        $.ajax({
+            url:cadena,
+            dataType:'json',
+            type:'Post',
+            async:true,
+            cache:false,
+            success:function(data){
+                $(data).each(function(index,value){
+
+                    //var x= value.fecha.split(" ");
+                    registroNoticia={idnoticias:value._id,imagenNoticia:value.urlImagen,name:value.name,resume:value.resume,detail:value.detail};
+
+                    console.log(registroNoticia.resume);
+                    console.log(registroNoticia.name);
+                    console.log(registroNoticia.detail);
+
+
+                    document.getElementById("name").value=registroNoticia.name;
+                    document.getElementById("resume").value=registroNoticia.resume;
+                    document.getElementById("detail").value=registroNoticia.detail;
+
+
+                });
+                //ciererwr success
+            }
+
+        });//cierra ajax
+
+    }
+    function Modificar()
+    {
+
+        var id="<?php echo $_GET['codigo']?>";
+        console.log(id);
+        var cadena='http://52.33.23.118:3354/api/tips/';
+        cadena+=id;
+        var cambio=0;
+
+
+        var convertir=new noticia(registroNoticia.imagenNoticia,document.getElementById("name").value,registroNoticia.resumen,document.getElementById("detail").value);
+        var formato=JSON.stringify(convertir)
+
+        console.log(formato);
+
+        $.ajax({
+            url:cadena,
+            contentType:"application/json;charset=utf-8",
+            dataType:'json',
+            type:'put',
+            data:formato,
+            async:true,
+            cache:false,
+            success:function(data){
+                $(data).each(function(index,value){
+
+                    cambio=1;
+                });
+                //ciererwr success
+            }
+        });//cierra ajax
+
+        if(cambio===1)
+        {
+            alert("se actualizo correctamente la Noticia cierre por favor esta ventana y actualice la pagina para observar la actualizacion")
+            return true;
+        }
+        else
+        {alert("se actualizo correctamente la Noticia cierre por favor esta ventana y actualice la pagina para observar la actualizacion ");
+
+            return true;
+        }
+
+    }//funcion
+
+    function noticia(urlImagen,nombreNoticia,resumenNoticia,detalleNoticia)
+    {
+        this.urlImagen=urlImagen;
+        this.name=nombreNoticia;
+        this.resume=resumenNoticia;
+        this.detail=detalleNoticia;
+        return this;
+    }
+
+
+</script>
+</body>
+
+</html>

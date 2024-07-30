@@ -1,0 +1,499 @@
+
+<script>
+    function loadData(id_user, fullName, phone, gender) {
+        document.getElementById("idUser").value = id_user;
+        document.getElementById("name").value = fullName;
+        document.getElementById("gender").value = gender;
+        document.getElementById("phone").value = phone;
+    }
+    function openDiv(id) {
+        document.getElementById('searchUser').className = 'hidden';
+        document.getElementById('searchInfo').className = 'hidden';
+        document.getElementById('jarvi_searchInfo').className = 'opacity-8 absolute';
+        document.getElementById('jarvi_searchUser').className = 'opacity-8 absolute';
+        document.getElementById(id).className = 'col-xs-12 animated rotateInUpLeft';
+        document.getElementById('jarvi_' + id).className = 'opacity-8 absolute giraleft';
+    }
+</script>
+<div class="col-md-6 push-20-top">
+    <div class="col-md-4 height-150">
+        <img onclick="openDiv('searchUser');" src="<?= PAYCORES_HOST_NAME ?>img/jarvi_img/circle_net_1.png" id="jarvi_searchUser"
+             class="opacity-8 giraleft absolute" width="130px">
+    </div>
+    <div class="col-md-4 height-150">
+        <img onclick="openDiv('searchInfo');" src="<?= PAYCORES_HOST_NAME ?>img/jarvi_img/circle_net_1.png" id="jarvi_searchInfo"
+             class="opacity-8 absolute" width="130px">
+    </div>
+    <div class="col-xs-12"></div>
+    <div class="col-xs-12" id="searchUser">
+
+        <?php
+        echo $this->tag->form(
+            array(
+                "action" => "emergency/registerEmergency", "method" => "post", "id" => "form"
+            )
+        ); ?>
+        <div class="col-md-6">
+            <input type="text" class="input-ge" name="name" id="nameFilter" placeholder="name value"/>
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="input-ge" name="phone" id="phoneFilter" placeholder="phone value"/>
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="input-ge" name="email" id="emailFilter" placeholder="email value"/>
+        </div>
+        <div class="col-md-6 center push-20-top">
+            <button type="submit" class="btn btn-primary rounded"> buscar usuario</button>
+        </div>
+
+        </form>
+    </div>
+    <div class="hidden" id="searchInfo">
+        <?php
+        echo $this->tag->form(
+            array(
+                "action" => "emergency/addEmergency","method" => "post", "id" => "form"
+            )
+        ); ?>
+        <div class="col-md-6">
+            <input type="text" class="input-ge" name="name"  id="name"  placeholder="name value"/>
+            <input type="hidden" name="idUser"  id="idUser" />
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="input-ge" name="gender"  id="gender"  placeholder="Genero"/>
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="input-ge" name="phone"  id="phone"  placeholder="Celular"  />
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="input-ge" name="location"  id="location"  placeholder="Ubicación"  />
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="input-ge" name="polares"  id="polares"  placeholder="Polares"  />
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="input-ge" name="emergency"  id="emergency"  placeholder="Emergencia"  />
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="input-ge" name="direction"  id="direction"  placeholder="Dirección"  />
+        </div>
+        <div class="col-md-6 center push-20-top">
+            <button type="submit" class="btn btn-primary rounded"> Buscar datos</button>
+        </div>
+
+        </form>
+    </div>
+    <div class="col-md-12 push-20-top">
+        <?php if (isset($dataSearch)) { ?>
+            <?php if (count($dataSearch) > 0) { ?>
+                <div class="col-xs-12 overflow-scroll radius-5 shadow-2-light height-400 remove-padding ">
+                    <?php for ($i = 0; $i < count($dataSearch); $i++) { ?>
+                        <div class="col-xs-12 push-20-top wow fadeInUp" data-wow-delay="0.<?= $i ?>s">
+                            <div class="col-xs-12">
+                                <div id="map_<?= $i ?>" class="col-xs-12 heightx100 absolute opacity-8"></div>
+                                <div class="absolute opacity-8 bg-black shadow-4 col-xs-12 heightx100"></div>
+                                <div class="padding-15 col-xs-12">
+                                    <div class="col-md-3">
+                                        <img src="<?= PAYCORES_HOST_NAME ?>img/Ge911b.gif" alt="" class="opacity-8 absolute"
+                                             style="width:200px;margin-top: -64px;margin-left: -51px;">
+                                        <img src="<?php echo $dataSearch[$i]['photo']; ?>" alt="" class="circle circle-sm">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-2">
+                                            <div class="padding-5 bg-green-dark rounded center absolute"><?php echo $dataSearch[$i]['id_user']; ?></div>
+                                        </div>
+                                        <div class="col-md-10 text-white text-shadow">
+                                            <div class="col-md-12">
+                                                <?php echo $dataSearch[$i]['fullName']; ?>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <?php echo $dataSearch[$i]['phone']; ?>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <?php echo $dataSearch[$i]['gender']; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3 center">
+                                        <?php
+                                        echo $this->tag->form(
+                                            array(
+                                                "action" => "user-adm/updateStatus", "method" => "post", "id" => "form"
+                                            )
+                                        ); ?>
+                                        <input type="hidden" class="form-control" name="id_user" id="id_user"
+                                               value="<?php echo $dataSearch[$i]['id_user']; ?>"/>
+                                        <input type="hidden" class="form-control" name="statusActive" id="statusActive"
+                                               value="<?php echo $dataSearch[$i]['statusActive']; ?>"/>
+                                        <button type="submit" class="btn text-shadow rounded"><span
+                                                    class="fa fa-lock"></span>
+                                        </button>
+                                        </form>
+                                        <input type="hidden" class="input-ge" name="id_user" id="id_user"
+                                               value="<?php echo $dataSearch[$i]['id_user']; ?>"/>
+                                        <input type="hidden" class="input-ge" name="statusActive" id="statusActive"
+                                               value="<?php echo $dataSearch[$i]['statusActive']; ?>"/>
+                                        <div class="col-md-2 center">
+                                            <button onclick="openDiv('searchInfo');loadData(<?php echo "'" . $dataSearch[$i]['id_user'] . "',"; ?><?php echo "'" . $dataSearch[$i]['fullName'] . "',"; ?><?php echo "'" . $dataSearch[$i]['phone'] . "',"; ?><?php echo "'" . $dataSearch[$i]['gender'] . "'"; ?>);"
+                                                    type="button" class="btn btn-primary rounded"> cargar data
+                                            </button>
+                                        </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php }; ?>
+                </div>
+            <?php } ?>
+        <?php } ?>
+    </div>
+</div>
+
+<!--inicio creacion de emergencia-->
+<div class="col-xs-6 push-20-top">
+    <input id="pac-input" class="input-ge" type="text" placeholder="Ingrese Dirección">
+    <div id="googleMap" style="width:100%;height:400px;float:right;">
+    </div>
+</div>
+
+<script>
+    function myMap() {
+        var mapProp = {
+            center: new google.maps.LatLng(4.531702, -75.674658),
+            zoom: 14,
+            styles: [
+                {
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#212121"
+                        }
+                    ]
+                },
+                {
+                    "elementType": "labels.icon",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#757575"
+                        }
+                    ]
+                },
+                {
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#212121"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#757575"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.country",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#9e9e9e"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.land_parcel",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.locality",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#bdbdbd"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#757575"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#181818"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#616161"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#1b1b1b"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "geometry.fill",
+                    "stylers": [
+                        {
+                            "color": "#2c2c2c"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#8a8a8a"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.arterial",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#373737"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.highway",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#3c3c3c"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.highway.controlled_access",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#4e4e4e"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.local",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#616161"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "transit",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#757575"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "water",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#000000"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "water",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#3d3d3d"
+                        }
+                    ]
+                }
+            ],
+            fullscreenControl: true,
+            streetViewControl: true,
+            mapTypeControl: true,
+            fullscreenControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER
+            },
+            streetViewControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER
+            },
+            mapTypeControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER
+            }
+        };
+        var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+        var input = document.getElementById('pac-input');
+        var searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+        map.addListener('bounds_changed', function () {
+            searchBox.setBounds(map.getBounds());
+        });
+
+        var markers = [];
+        searchBox.addListener('places_changed', function () {
+            var places = searchBox.getPlaces();
+
+            if (places.length == 0) {
+                return;
+            }
+
+            markers.forEach(function (marker) {
+                marker.setMap(null);
+            });
+            markers = [];
+
+            var bounds = new google.maps.LatLngBounds();
+            places.forEach(function (place) {
+                var icon = {
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(25, 25)
+                };
+
+                markers.push(new google.maps.Marker({
+                    map: map,
+                    icon: icon,
+                    title: place.name,
+                    position: place.geometry.location
+                }));
+                var coordenadas = place.geometry.location;
+                document.getElementById('location').value = coordenadas;
+                document.getElementById('direction').value = input.value;
+
+                if (coordenadas != null)
+                    convertDecimal();
+
+                if (place.geometry.viewport) {
+                    bounds.union(place.geometry.viewport);
+                } else {
+                    bounds.extend(place.geometry.location);
+                }
+            });
+            map.fitBounds(bounds);
+        });
+        google.maps.event.addListener(map, 'click', function (event) {
+            alert(event.latLng.lat() + ", " + event.latLng.lng());
+        });
+
+    }
+
+    function convertDecimal() {
+        var error = null;
+
+        try {
+            var separar = document.getElementById("location").value;
+            separar = separar.split(",");
+            var lat = separar[0].replace("(", " ");
+            var lng = separar[1].replace(")", " ");
+
+            var result = Decimal2GMS(lat, lng);
+        }
+        catch (exception) {
+            error = exception;
+        }
+
+        if (error != null)
+            alert("error" + error);
+        else {
+
+            var cadena = "Latitud:" + result.latitude.degrees + "° " + result.latitude.minutes + "' " + result.latitude.seconds + "'' " + result.latitude.dir + " " + "Longitud:" + result.longitude.degrees + "° " + result.longitude.minutes + "' " + result.longitude.seconds + "'' " + result.longitude.dir;
+
+            document.getElementById("polares").value = cadena;
+        }
+    }
+
+
+    function Decimal2GMS(latitude, longitude) {
+
+
+        latitude_sign = 1;
+        longitude_sign = 1;
+
+        if (latitude < 0)
+            latitude_sign = -1;
+
+        if (longitude < 0)
+            longitude_sign = -1;
+
+
+        if (latitude > 90 || latitude < -90)
+            throw "Latitude.degrees (-90 < d < 90) invalid: " + latitude;
+
+        if (longitude > 180 || longitude < -180)
+            throw "Longitude.degrees (-180 < d < 180) invalid: " + longitude;
+
+
+        latitude_deg = Math.floor(Math.abs(latitude));
+        latitude_min = Math.floor((Math.abs(latitude) - latitude_deg) * 60);
+        latitude_sec = Math.ceil(((Math.abs(latitude) - latitude_deg) * 60 - latitude_min) * 60);
+        latitude_dir = (latitude_sign > 0) ? "N" : "S";
+
+        longitude_deg = Math.floor(Math.abs(longitude));
+        longitude_min = Math.floor((Math.abs(longitude) - longitude_deg) * 60);
+        longitude_sec = Math.ceil(((Math.abs(longitude) - longitude_deg) * 60 - longitude_min) * 60);
+        longitude_dir = (longitude_sign > 0) ? "E" : "W";
+
+
+        return {
+            "latitude": {
+                "degrees": Math.abs(latitude_deg),
+                "minutes": latitude_min,
+                "seconds": Math.round(latitude_sec),
+                "dir": latitude_dir
+            },
+            "longitude": {
+                "degrees": Math.abs(longitude_deg),
+                "minutes": longitude_min,
+                "seconds": Math.round(longitude_sec),
+                "dir": longitude_dir
+            }
+        };
+    }
+
+</script>
+<script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApG5XlUDnYYXi4pKkv2_ucfx_kZZqAaWw&callback=myMap&libraries=places">
+</script>

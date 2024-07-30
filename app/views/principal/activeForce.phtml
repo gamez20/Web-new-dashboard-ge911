@@ -1,0 +1,466 @@
+<style>
+    @keyframes loadZoom {
+        0% {
+            font-size: 12px;
+            margin-top: 25px;
+            color:white;
+        }
+        50% {
+            font-size: 32px;
+            margin-top: 15px;
+            color: #73beb5;
+        }
+        70% {
+            font-size: 40px;
+        }
+        86% {
+            margin-top: 10px;
+            color: #7f96be;
+        }
+        95% {
+            font-size: 50px;
+            margin-top: 5px;
+        }
+        100% {
+            font-size: 64px;
+            color: #1d8bff;
+        }
+    }
+    .loadZoom {
+        animation-name: loadZoom;
+        animation-duration: 10s;
+        animation-iteration-count: infinite;
+    }
+    .pull-50-left {
+        margin-left: -150px;
+        margin-top: 20px;
+    }
+</style>
+
+<header class="col-xs-12 push-20-top">
+    <a href="<?= PAYCORES_HOST_NAME ?>principal/forces">
+        <button class="btn-outline">Fuerzas registradas</button>
+    </a>
+</header>
+<div id="datesge" class="col-md-5 padding-20 center text-white">
+</div>
+<div class="col-md-1 text-white center">
+    <div class="col-xs-12 absolute middle">
+        <span class="fa fa-circle font-s12 loadZoom"></span>
+    </div>
+    <div class="col-xs-12 absolute">
+        <span class="fa fa-circle-thin font-s64"></span>
+    </div>
+</div>
+<div class="pull-right resplandor-ge " id="div-map">
+    <img src="<?=PAYCORES_HOST_NAME?>img/buttons/btn_ge1_infinite.gif" class="absolute pull-50-left" width="700px">
+    <div id="map" class="pull-right col-xs-12 wow zoomIn"></div>
+</div>
+<script type="text/javascript">
+    $( document ).ready(function() {
+        set_force();
+    });
+    var e;
+    var markersForce = [];
+    var markersEmerg = [];
+    function initMap() {
+        e=new google.maps.Map(document.getElementById("map"), {
+                zoom:14, center: {
+                    lat: 4.531702, lng: -75.674658
+                },
+            styles: [
+                {
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#212121"
+                        }
+                    ]
+                },
+                {
+                    "elementType": "labels.icon",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#757575"
+                        }
+                    ]
+                },
+                {
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#212121"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#757575"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.country",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#9e9e9e"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.land_parcel",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.locality",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#bdbdbd"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#757575"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#181818"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#616161"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#1b1b1b"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "geometry.fill",
+                    "stylers": [
+                        {
+                            "color": "#2c2c2c"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#8a8a8a"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.arterial",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#373737"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.highway",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#3c3c3c"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.highway.controlled_access",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#4e4e4e"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.local",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#616161"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "transit",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#757575"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "water",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#000000"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "water",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#3d3d3d"
+                        }
+                    ]
+                }
+            ],
+            fullscreenControl: true,
+            streetViewControl: true,
+            mapTypeControl: true,
+            fullscreenControlOptions: {
+                position: google.maps.ControlPosition.BOTTOM_CENTER
+            },
+            streetViewControlOptions: {
+                position: google.maps.ControlPosition.BOTTOM_CENTER
+            },
+            mapTypeControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER
+            }
+            }
+        );
+        setInterval(set_force , 10000);
+        setInterval(set_emergency , 10000);
+        $.ajax( {
+                url:"<?= PAYCORES_HOST_NAME ?>principal/principal", type:"post", data: {
+                    active: 0
+                }
+                , success:function(t) {
+                    if(obj=JSON.parse(t), obj.status) {
+                        var r=obj.data;
+                        for(var a=0;a<r.length;a++) {
+                            var l=r[a].location.split(",");
+                            var i=new google.maps.LatLng(l[0], l[1]);
+
+                            if(r[a].ocupation == 'AMBULANCIA'){
+                                color = 'bg-blue';
+                                icon = 'fa-ambulance'
+                            }
+                            else if(r[a].ocupation == 'EJERCITO'){
+                                color = 'bg-orange';
+                                icon = 'fa-fighter-jet'
+                            }/*
+                            $('#datesge').append('<div class="col-xs-12 push-20-top wow fadeInUp" data-wow-delay="0.' + a + 's"> ' +
+                                '<div class="absolute opacity-5 bg-black shadow-4 col-xs-11 heightx100"></div>' +
+                                '<div class="col-md-2 push-20-top font-s48 padding-15 center"> ' +
+                                    '<span class="fa ' + icon + ' push-15-left"></span> ' +
+                                '</div>' +
+                                '<div class="col-md-10 push-20-top padding-20-b"> ' +
+                                    '<div class="col-xs-12"> ' +
+                                        '<div class="col-md-6"> ' +
+                                            '<p>' + r[a].fullName + '</p>' +
+                                        '</div>' +
+                                        '<div class="col-md-6"> ' +
+                                            '<p>' + r[a].email + '</p>' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div class="col-xs-12"> ' +
+                                        '<div class="col-md-4"> ' +
+                                            '<p>' + r[a].phone + '</p>' +
+                                        '</div>' +
+                                        '<div class="col-md-4"> ' +
+                                            '<p>' + r[a].placa + '</p>' +
+                                        '</div>' +
+                                        '<div class="col-md-4"> ' +
+                                            '<p>' + r[a].city + '</p>' +
+                                        '</div>' +
+                                    '</div>' +
+                                '</div>');*/
+                            addMarkerForce(i);
+                        }
+                    }
+                }
+            }
+        );
+
+        $.ajax( {
+            url:"<?= PAYCORES_HOST_NAME ?>principal/reloadMap", type:"post",
+             success:function(t) {
+                if(obj=JSON.parse(t), obj.status) {
+                    var r=obj.data;
+                    if(r.length>markersEmerg.length){
+                        deleteMarkers(2);
+                        for(var a=0;a<r.length;a++) {
+                            var l=r[a].location.split(" ");
+                            var i=new google.maps.LatLng(l[0], l[1]);
+                            addMarkerEmerg(i);
+                        }
+                        playSound();
+                    }
+                }
+            }
+        });
+    }
+    function set_force() {
+        document.getElementById('datesge').innerHTML = '';
+        console.log("agregando fuerzas");
+        $.ajax( {
+                url:"<?= PAYCORES_HOST_NAME ?>principal/principal", type:"post", data: {
+                    active: 0
+                }
+                , success:function(t) {
+                    if(obj=JSON.parse(t), console.log(obj.status), obj.status) {
+                        var r=obj.data;
+                        var rE=obj.dataa;
+                        var rUser=obj.dataUser;
+                        for(var a=0;a<r.length;a++) {
+                            var l=r[a].location.split(",");
+                            var i=new google.maps.LatLng(l[0], l[1]);
+                            addMarkerForce(i);
+                            $('#datesge').append('<div class="col-xs-12 push-20-top wow fadeIn" data-wow-delay="0.' + a + 's"> ' +
+                                '<div class="absolute opacity-5 bg-black shadow-4 col-xs-11 heightx100"></div>' +
+                                '<div class="col-md-2 font-s48 padding-15 center"> ' +
+                                '<img src="<?= PAYCORES_HOST_NAME ?>img/Ge911b.gif" alt="" class="opacity-5 absolute" style="width:200px;margin-top: -64px;margin-left: -51px;">' +
+                                '<img src="' + rUser[a].photo + '" class="circle circle-sm"></div>' +
+                                '<div class="col-md-10 push-20-top padding-20-b center"> ' +
+                                '<div class="col-xs-12"> ' +
+                                '<div class="col-md-6"> ' +
+                                '<p>' + rE[a].emergency + '</p>' +
+                                '</div>' +
+                                '<div class="col-md-6"> ' +
+                                '<p>' + rE[a].iduser + '</p>' +
+                                '</div>' +
+                                '</div>' +
+                                '<div class="col-xs-12"> ' +
+                                '<div class="col-md-4"> ' +
+                                '<p>' + rE[a].hour + '</p>' +
+                                '</div>' +
+                                '<div class="col-md-4"> ' +
+                                '<p>' + r[a].placa + '</p>' +
+                                '</div>' +
+                                '<div class="col-md-4"> ' +
+                                '<p>' + r[a].city + '</p>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>');
+                        }
+                    }
+                }
+            }
+        )
+    }
+    function set_emergency() {
+        console.log("agregando emergencias");
+        divMap = document.getElementById('div-map');
+        $.ajax( {
+            url:"<?= PAYCORES_HOST_NAME ?>principal/reloadMap", type:"post"
+            , success:function(t) {
+                if(obj=JSON.parse(t), obj.status) {
+                    var r=obj.data;
+                    if(r.length>markersEmerg.length){
+                        deleteMarkers(2);
+                        for(var a=0;a<r.length;a++) {
+                            var l=r[a].location.split(" ");
+                            var i=new google.maps.LatLng(l[0], l[1]);
+                            addMarkerEmerg(i);
+                        }
+                        playSound();
+                        divMap.className = 'pull-right resplandor-danger';
+                        setTimeout(function(){
+                            divMap.className = 'pull-right resplandor-ge';
+                        }, 10000);
+                    }else if(r.length<=markersEmerg.length){
+                        deleteMarkers(2);
+                        for(var a=0;a<r.length;a++) {
+                            var l=r[a].location.split(" ");
+                            var i=new google.maps.LatLng(l[0], l[1]);
+                            addMarkerEmerg(i);
+                        }
+                    }
+                }
+            }
+        })
+    }
+    function addMarkerForce(location) {
+        var marker = new google.maps.Marker({
+            position: location,
+            map: e,
+            icon: '<?=PAYCORES_HOST_NAME?>img/marker_ambulance.png'
+        });
+        markersForce.push(marker);
+    }
+    function addMarkerEmerg(location) {
+        var marker = new google.maps.Marker({
+            position: location,
+            map: e,
+            icon: '<?=PAYCORES_HOST_NAME?>img/marker_ambulance.png'
+        });
+        markersEmerg.push(marker);
+    }
+    function setMapOnAll(e,num) {
+        if(num==1){
+            markersForce=[];
+            for (var i = 0; i < markersForce.length; i++) {
+                markersForce[i].setMap(e);
+            }
+        }else if(num==2){
+            markersEmerg=[];
+            for (var i = 0; i < markersEmerg.length; i++) {
+                markersEmerg[i].setMap(e);
+            }
+        }
+    }
+    function clearMarkers(num) {
+        setMapOnAll(null,num);
+    }
+    function deleteMarkers(num) {
+        clearMarkers(num);
+    }
+    function playSound(){
+        var audio = new Audio('<?= PAYCORES_HOST_NAME ?>audio/Red.mp3');
+        audio.play();
+    }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApG5XlUDnYYXi4pKkv2_ucfx_kZZqAaWw&callback=initMap">
+</script>
+
+

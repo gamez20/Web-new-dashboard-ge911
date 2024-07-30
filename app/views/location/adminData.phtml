@@ -1,0 +1,57 @@
+<div class="col-md-3">
+    <div class="col-md-10 col-md-offset-1 padding-10 bg-black shadow-2-light push-150-top radius-5">
+        <?php
+        echo $this->tag->form(
+            array(
+                "action" => "location/adminData","method" => "post", "id" => "form"
+            )
+        ); ?>
+        <div class="col-md-12 push-10-top">
+            <input type="text" class="input-ge" name="name"  id="name"  placeholder="Nombre"  />
+        </div>
+        <div class="col-md-12 push-10-top">
+            <input type="text" class="input-ge" name="location"  id="location"  placeholder="Ubicación"  />
+        </div>
+        <div class="col-md-12 push-10-top">
+            <input type="text" class="input-ge" name="phone"  id="phone"  placeholder="phone value"  />
+        </div>
+        <div class="col-md-12 push-10-top">
+            <input type="text" class="input-ge" name="date"  id="date"  placeholder="date value"  />
+        </div>
+        <div class="col-md-12 push-10-top center">
+            <button type="submit" class="btn btn-primary rounded"> Buscar datos</button>
+        </div>
+        </form>
+    </div>
+</div>
+<?php if ( isset($allDataAdmin) ){  ?>
+    <?php if (count($allDataAdmin) >= 0 ){ ?>
+        <div class="col-md-8 bg-white push-50-top remove-padding radius-8 height-500 overflow-scroll radius-8">
+            <table class="tablence">
+                <thead>
+                <tr class="bg-asphalt text-white">
+                    <th>fullName </th>
+                    <th>phone </th>
+                    <th>location </th>
+                    <th>date </th>
+                    <th>time </th>
+                    <th>placa </th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php for ($i=0; $i <count($allDataAdmin);$i++){ ?>
+                    <tr>
+                        <td><?php echo  $allDataAdmin[$i]['full_name']; ?></td>
+                        <td><?php echo  $allDataAdmin[$i]['phone']; ?></td>
+                        <td><?php echo  $allDataAdmin[$i]['location']; ?></td>
+                        <td><?php echo  $allDataAdmin[$i]['date']; ?></td>
+                        <td><?php echo  $allDataAdmin[$i]['time']; ?></td>
+                        <td><?php echo  $allDataAdmin[$i]['placa']; ?></td>
+                    </tr>
+                <?php }; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php } ?>
+<?php } ?>
+

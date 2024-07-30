@@ -1,0 +1,60 @@
+<style>
+    .node {
+        stroke: #ffffff;
+        stroke-width: 1.5px;
+        cursor: pointer;
+    }
+
+    .link {
+        stroke: #999;
+        stroke-opacity: .6;
+    }
+
+    svg {
+        box-shadow: 4px 4px 10px rgba(30, 30, 30, 0.7);
+        position: relative;
+        width: 90%;
+        height: 800px;
+        overflow: scroll;
+    }
+
+    #graph {
+        padding-top: 30px;
+    }
+
+    #tooltip {
+        position: absolute;
+        color: #f6f6f6;
+        padding: 8px;
+        border-radius: 5px;
+        pointer-events: none;
+        text-align: center;
+        opacity: 0;
+    }
+
+    text.legend {
+        fill: #ffffff;
+        font-size: 14px;
+    }
+
+</style>
+<?php
+echo $this->tag->form(
+    array(
+        "action" => "user-adm", "method" => "post", "id" => "form", "class" => "hidden"
+    )
+); ?>
+    <input type="text" name="idUser" id="id_user" value="">
+    <button type="submit" id="btn_user" value=""></button>
+</form>
+<div id="graph"></div>
+<div id="tooltip">
+    <div class="padding-10 bg-primary rounded center"><span id="tooltipName"></span></div>
+    <p id="tooltipDate"></p>
+    <p id="tooltipInfo"></p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script type="text/javascript" src="<?=PAYCORES_HOST_NAME?>js/main.js">
+
+
+</script>

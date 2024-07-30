@@ -1,0 +1,54 @@
+<div class="col-md-3">
+    <div class="col-md-10 col-md-offset-1 padding-10 bg-black shadow-2-light push-150-top radius-5">
+        <?php
+        echo $this->tag->form(
+            array(
+                "action" => "location","method" => "post", "id" => "form"
+            )
+        ); ?>
+        <div class="col-md-12 push-10-top">
+            <input type="text" class="input-ge" name="name"  id="name"  placeholder="Nombre"  />
+        </div>
+        <div class="col-md-12 push-10-top">
+            <input type="text" class="input-ge" name="location"  id="location"  placeholder="Ubicación"  />
+        </div>
+        <div class="col-md-12 push-10-top">
+            <input type="text" class="input-ge" name="phone"  id="phone"  placeholder="Telefono"  />
+        </div>
+        <div class="col-md-12 push-10-top">
+            <input type="text" class="input-ge" name="date"  id="date"  placeholder="Fecha"  />
+        </div>
+        <div class="col-md-12 center push-20-top">
+            <button type="submit" class="btn btn-primary rounded"> Buscar datos</button>
+        </div>
+        </form>
+    </div>
+</div>
+<div class="col-md-8 bg-white push-50-top remove-padding radius-8 height-500 overflow-scroll">
+<?php if ( isset($allUserData) ){  ?>
+    <?php if (count($allUserData) >= 0 ){ ?>
+            <table class="tablence">
+                <thead>
+                <tr class="bg-asphalt text-white">
+                    <th>Nombre (desde Facebook)</th>
+                    <th>Teléfono </th>
+                    <th>Ubicación </th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php for ($i=0; $i <count($allUserData);$i++){ ?>
+                    <tr>
+                        <td><?php echo  $allUserData[$i]['full_name']; ?></td>
+                        <td><?php echo  $allUserData[$i]['phone']; ?></td>
+                        <td><?php echo  $allUserData[$i]['location']; ?></td>
+                        <td><?php echo  $allUserData[$i]['date']; ?></td>
+                        <td><?php echo  $allUserData[$i]['hour']; ?></td>
+                    </tr>
+                <?php }; ?>
+                </tbody>
+            </table>
+    <?php } ?>
+<?php } ?>
+</div>

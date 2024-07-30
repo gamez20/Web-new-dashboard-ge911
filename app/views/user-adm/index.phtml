@@ -1,0 +1,382 @@
+<style>
+    .openMap {
+        transition: 300ms;
+        z-index: 30;
+        height: 300px;
+    }
+
+    .trans300 {
+        transition: 300ms;
+    }
+</style>
+<div class="col-xs-12 shadow-2-light padding-10 fixed index50">
+    <div class="col-md-10 remove-padding">
+        <?php
+        echo $this->tag->form(
+            array(
+                "action" => "user-adm", "method" => "post", "id" => "form"
+            )
+        ); ?>
+        <div class="col-md-2">
+            <input type="text" class="input-ge" name="idUser" id="idFilter" placeholder="Id usuario"/>
+        </div>
+        <div class="col-md-2">
+            <input type="text" class="input-ge" name="name" id="nameFilter" placeholder="Nombre"/>
+        </div>
+        <div class="col-md-2">
+            <input type="text" class="input-ge" name="location" id="locationFilter" placeholder="Ubicación"/>
+        </div>
+        <div class="col-md-2">
+            <input type="text" class="input-ge" name="phone" id="phoneFilter" placeholder="Télefono"/>
+        </div>
+        <div class="col-md-2">
+            <input type="text" class="input-ge" name="email" id="emailFilter" placeholder="E-mail"/>
+        </div>
+        <div class="col-md-2">
+            <div class="checklence checklence-sm">
+                <input name="status" id="statusFilter" type="checkbox" value="0" onchange="updateStatusValue()">
+                <div class="checkContent">
+                    <span id="spamStatus" style="background:#118dff;"></span>
+                </div>
+            </div>
+        </div><br>
+        <div class="col-md-2 center push-10-top">
+            <button type="submit" class="btn-outline rounded"> Buscar datos</button>
+        </div>
+        </form>
+    </div>
+</div>
+<div class="col-xs-12 push-50-top text-white">
+    <div class="col-xs-12 bg-black padding-10">
+        <p class="col-md-2"><b>Id User:</b><?php echo $idUser; ?></p>
+        <p class="col-md-2"><b>name:</b><?php echo $name; ?></p>
+        <p class="col-md-2"><b>location:</b><?php echo $location; ?></p>
+        <p class="col-md-2"><b>phone:</b><?php echo $phone; ?></p>
+        <p class="col-md-2"><b>email:</b><?php echo $email; ?></p>
+        <p class="col-md-2"><b>status:</b><?php echo $status; ?></p>
+    </div>
+</div>
+<div class="col-xs-12">
+    <?php if (isset($dataSearch)) { ?>
+        <?php if (count($dataSearch) >= 0) { ?>
+            <div class="col-xs-12 radius-5 shadow-2-light text-white text-shadow">
+                <?php for ($i = 0; $i < count($dataSearch); $i++) { ?>
+                    <div class="col-xs-4 push-20-top wow fadeInUp" data-wow-delay="0.<?= $i ?>s">
+                        <div class="col-xs-12">
+                        <div id="map_<?= $i ?>" class="col-xs-12 heightx100 absolute opacity-8"></div>
+                        <div class="absolute opacity-8 bg-black shadow-4 col-xs-12 heightx100"></div>
+                        <div class="padding-15 col-xs-12">
+                            <div class="col-md-3">
+                                <img src="<?= PAYCORES_HOST_NAME ?>img/Ge911b.gif" alt="" class="opacity-8 absolute"
+                                     style="width:200px;margin-top: -64px;margin-left: -51px;">
+                                <img src="<?php echo $dataSearch[$i]['photo']; ?>" alt="" class="circle circle-sm">
+                            </div>
+                            <div class="col-md-9">
+                                <div class="col-md-2">
+                                    <div class="padding-5 bg-green-dark rounded center absolute"><?php echo $dataSearch[$i]['id_user']; ?></div>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="col-md-12 overflow-hidden" style="height:20px">
+                                        <?php echo $dataSearch[$i]['fullName']; ?>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <?php echo $dataSearch[$i]['phone']; ?>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <?php echo $dataSearch[$i]['email']; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 center">
+                                <?php
+                                echo $this->tag->form(
+                                    array(
+                                        //"action" => "user-adm/updateStatus", "method" => "post", "id" => "form"
+                                        "action" => "javascript:updateStatus(".$dataSearch[$i]['id_user'].");", "method" => "post", "id" => "form_".$dataSearch[$i]['id_user']
+                                    )
+                                ); ?>
+                                <input type="hidden" class="form-control" name="id_user" id="id_user"
+                                       value="<?php echo $dataSearch[$i]['id_user']; ?>"/>
+                                <input type="hidden" class="form-control" name="statusActive" id="statusActive"
+                                       value="<?php echo $dataSearch[$i]['statusActive']; ?>"/>
+
+                                <button type="button" id="openMap<?= $i ?>" class="btn-outline rounded push-5-left"
+                                        onclick="openTheMap('map_<?= $i ?>', '<?= $i ?>')"><span
+                                            class="fa fa-map-o"></span> Ver ubicación
+                                </button>
+                                <button type="button" id="closeMap<?= $i ?>" class="hidden"
+                                        onclick="closeTheMap('map_<?= $i ?>', '<?= $i ?>')"><span
+                                            class="fa fa-map"></span> Ver ubicación
+                                </button>
+                                <?php
+                                if($dataSearch[$i]['statusActive']==0){?>
+                                    <button type="submit" class="btn text-shadow rounded"><span class="fa fa-unlock" style="color:green"></span>
+                                    </button>
+                                <?php }else{?>
+                                    <button type="submit" class="btn text-shadow rounded"><span class="fa fa-lock" style="color:red"></span>
+                                    </button>
+                                <?php  } ?>
+
+                                </form>
+                            </div>
+                            <div class="col-xs-12 center">
+
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                <?php }; ?>
+                <script>
+                    function openTheMap(map_id, id) {
+                        map = document.getElementById(map_id);
+                        map.className = 'col-xs-12 remove-padding openMap';
+                        document.getElementById('openMap' + id).className = 'hidden';
+                        document.getElementById('closeMap' + id).className = 'btn-outline rounded push-5-left';
+                    }
+                    function closeTheMap(map_id, id) {
+                        map = document.getElementById(map_id);
+                        map.className = 'col-xs-12 heightx100 absolute opacity-8';
+                        document.getElementById('closeMap' + id).className = 'hidden';
+                        document.getElementById('openMap' + id).className = 'btn-outline rounded push-5-left';
+                    }
+                    function initMap() {
+                        <?php for ($i = 0; $i < count($dataSearch);$i++){ ?>
+                        var e = new google.maps.Map(document.getElementById("map_" + <?= $i ?>), {
+                            zoom: 14,
+                            center: new google.maps.LatLng(<?php echo $dataSearch[$i]['location']; ?>),
+                            styles: [
+                                {
+                                    "elementType": "geometry",
+                                    "stylers": [
+                                        {
+                                            "color": "#212121"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "elementType": "labels.icon",
+                                    "stylers": [
+                                        {
+                                            "visibility": "off"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "elementType": "labels.text.fill",
+                                    "stylers": [
+                                        {
+                                            "color": "#757575"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "elementType": "labels.text.stroke",
+                                    "stylers": [
+                                        {
+                                            "color": "#212121"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "administrative",
+                                    "elementType": "geometry",
+                                    "stylers": [
+                                        {
+                                            "color": "#757575"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "administrative.country",
+                                    "elementType": "labels.text.fill",
+                                    "stylers": [
+                                        {
+                                            "color": "#9e9e9e"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "administrative.land_parcel",
+                                    "stylers": [
+                                        {
+                                            "visibility": "off"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "administrative.locality",
+                                    "elementType": "labels.text.fill",
+                                    "stylers": [
+                                        {
+                                            "color": "#bdbdbd"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "poi",
+                                    "elementType": "labels.text.fill",
+                                    "stylers": [
+                                        {
+                                            "color": "#757575"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "poi.park",
+                                    "elementType": "geometry",
+                                    "stylers": [
+                                        {
+                                            "color": "#181818"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "poi.park",
+                                    "elementType": "labels.text.fill",
+                                    "stylers": [
+                                        {
+                                            "color": "#616161"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "poi.park",
+                                    "elementType": "labels.text.stroke",
+                                    "stylers": [
+                                        {
+                                            "color": "#1b1b1b"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "road",
+                                    "elementType": "geometry.fill",
+                                    "stylers": [
+                                        {
+                                            "color": "#2c2c2c"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "road",
+                                    "elementType": "labels.text.fill",
+                                    "stylers": [
+                                        {
+                                            "color": "#8a8a8a"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "road.arterial",
+                                    "elementType": "geometry",
+                                    "stylers": [
+                                        {
+                                            "color": "#373737"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "road.highway",
+                                    "elementType": "geometry",
+                                    "stylers": [
+                                        {
+                                            "color": "#3c3c3c"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "road.highway.controlled_access",
+                                    "elementType": "geometry",
+                                    "stylers": [
+                                        {
+                                            "color": "#4e4e4e"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "road.local",
+                                    "elementType": "labels.text.fill",
+                                    "stylers": [
+                                        {
+                                            "color": "#616161"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "transit",
+                                    "elementType": "labels.text.fill",
+                                    "stylers": [
+                                        {
+                                            "color": "#757575"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "water",
+                                    "elementType": "geometry",
+                                    "stylers": [
+                                        {
+                                            "color": "#000000"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "featureType": "water",
+                                    "elementType": "labels.text.fill",
+                                    "stylers": [
+                                        {
+                                            "color": "#3d3d3d"
+                                        }
+                                    ]
+                                }
+                            ],
+                            mapTypeControl: false,
+                            zoomControl: false,
+                            scaleControl: false,
+                            streetViewControl: true,
+                            streetViewControlOptions: {
+                                position: google.maps.ControlPosition.BOTTOM_CENTER
+                            },
+                            fullscreenControl: true,
+                            fullscreenControlOptions: {
+                                position: google.maps.ControlPosition.BOTTOM_CENTER
+                            }
+                        });
+                        var marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(<?php echo $dataSearch[$i]['location']; ?>),
+                            title: '<?php echo $dataSearch[$i]['fullName']; ?>'
+                        });
+                        marker.setMap(e);
+                        <?php }; ?>
+                    }
+
+                </script>
+            </div>
+        <?php } ?>
+    <?php } ?>
+</div>
+<script>
+    function updateStatus(num) {
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo $this->url->get('user-adm/updateStatus') ?>',
+            data: $('#form_'+num).serialize(),
+            success: function (response) {
+                console.log(response);
+                location.reload();
+            },
+        });
+    }
+    function updateStatusValue(){
+        if(document.getElementById('statusFilter').value == "0"){
+            document.getElementById('statusFilter').value = "1";
+           document.getElementById('spamStatus').style.background = "red";;
+        }else if(document.getElementById('statusFilter').value == "1"){
+            document.getElementById('statusFilter').value = "0";
+            document.getElementById('spamStatus').style.background = "blue";;
+        }
+    }
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApG5XlUDnYYXi4pKkv2_ucfx_kZZqAaWw&callback=initMap">
+</script>

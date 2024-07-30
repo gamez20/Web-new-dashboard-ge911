@@ -1,0 +1,89 @@
+<header>
+    <header class="col-md-12 padding-15">
+        <?php
+        echo $this->tag->form(
+            array(
+                "action" => "config/addAdminPanel","method" => "post", "id" => "form"
+            )
+        ); ?>
+        <div class="col-md-1">
+            <input type="text" class="input-ge" name="id_codigo"  id="id_codigo"  placeholder="id  "  />
+            </div>
+        <div class="col-md-2">
+            <input type="text" class="input-ge" name="username"  id="username"  placeholder="Username  "  />
+            </div>
+        <div class="col-md-2">
+            <input type="password" class="input-ge" name="password"  id="password"  placeholder="Password  "  />
+            </div>
+        <div class="col-md-2">
+            <input type="text" class="input-ge" name="name"  id="name"  placeholder="name "  />
+            </div>
+        <div class="col-md-1">
+            <input type="text" class="input-ge" name="permisos"  id="permisos"  placeholder="Permisos "  />
+            </div>
+        <div class="col-md-2">
+            <input type="text" class="input-ge" name="email"  id="email"  placeholder="Email "  />
+            </div>
+        <div class="col-md-2 center">
+            <button type="submit" class="btn btn-primary rounded"> Registrar Administrador</button>
+        </div>
+
+
+        </form>
+</header>
+<?php if ( isset($allDataAdminPanel) ){  ?>
+    <?php if (count($allDataAdminPanel) > 0 ){ ?>
+        <div class="col-xs-12 remove-padding push-50-top text-white text-shadow push-40-left overflow-scroll"
+             style="height: 800px;">
+                <?php for ($i=0; $i <count($allDataAdminPanel);$i++){ ?>
+                    <div class="col-xs-4 push-20-top wow fadeInUp" data-wow-delay="0.<?= $i ?>s">
+                        <div class="absolute opacity-5 bg-black shadow-4 col-xs-11 heightx100"></div>
+                        <div class="col-md-2 push-20-top font-s48 padding-15 center">
+                            <span class="fa fa-user push-15-left"></span>
+
+                            <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" id="userAdmin_<?=$i?>">
+                                <div class="modal-dialog modal-sm" role="document">
+                                    <div class="modal-content col-xs-12 bg-black">
+                                        <?php
+                                        echo $this->tag->form(
+                                            array(
+                                                "action" => "config/deleteAdminPanel","method" => "post", "id" => "form"
+                                            )
+                                        ); ?>
+                                        <input type="hidden" class="input-ge" name="id_codigo"  id="id_codigo" value="<?php echo $allDataAdminPanel[$i]['id_codigo']; ?>" />
+                                        <div class="col-xs-12 center">
+                                            <h3 class="text-black-light">¿Esta seguro que desea eliminar este usuario administrador?</h3>
+                                            <button class="btn btn-danger rounded">Aceptar</button>
+                                        </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <button data-toggle="modal" data-target="#userAdmin_<?=$i?>" class="btn btn-danger rounded opacity-5 absolute font-s12 push-10-top"><span
+                                    class="fa fa-remove"></span></button>
+                        <div class="col-md-10 push-20-top padding-20-b">
+                            <div class="col-xs-12">
+                                <div class="col-md-2">
+                                    <p><?php echo  $allDataAdminPanel[$i]['id_codigo']; ?></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p><?php echo  $allDataAdminPanel[$i]['username']; ?></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p><?php echo  $allDataAdminPanel[$i]['permisos']; ?></p>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="col-md-12">
+                                    <p><?php echo  $allDataAdminPanel[$i]['email']; ?></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php }; ?>
+        </div>
+    <?php } ?>
+<?php } ?>
+

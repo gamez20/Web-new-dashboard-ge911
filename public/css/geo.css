@@ -1,0 +1,273 @@
+
+
+
+
+/*Eliminamos los margenes y paddings que agrega el navegador por defecto*/
+* {
+  padding: 0;
+  margin: 0;
+}
+
+/*Agregamos margenes inferiores a los parrafos*/
+p {
+  margin-bottom: 20px;
+}
+
+header {
+  background: #000;
+  opacity: 0.8;
+  width: 100%;
+  position: fixed;
+  z-index: 100;
+  height: 70px;
+}
+
+nav {
+  float: left; /* Desplazamos el nav hacia la izquierda */
+}
+
+nav ul {
+  list-style: none;
+  overflow: hidden; /* Limpiamos errores de float */
+}
+
+nav ul li {
+  float: left;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+}
+
+
+
+
+
+nav ul li a {
+  display: block; /* Convertimos los elementos a en elementos bloque para manipular el padding */
+  padding: 20px;
+  color: #fff;
+  text-decoration: none;
+}
+
+nav ul li a:hover {
+  background: #0515FD;
+  color: #fff;
+  
+}
+
+
+/* para la caja de texto del calendario*/
+
+.form-controls {
+  display: block;
+  width: 60%;
+  height: 34px;
+  padding:6px 118px;
+  font-size: 18px;
+  line-height: 1.42857143;
+  color:#030206;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+
+.contenido {
+  padding-top: 80px;
+}
+
+
+.wrapper {
+  width: 80%;
+  margin: auto;
+  overflow:hidden;
+}
+
+
+
+
+
+/**
+ * Caja del Comentario
+ ---------------------------*/
+ .comments-list .comment-box { 
+  width: 320px;
+  float: left;
+  position: relative;
+  -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+  -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+  box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+.headers {
+ /* border: 1px solid red;*/
+ padding: 3px;
+ width:0px; 
+ height:0px;
+
+}
+.menu {
+  width: 38%;
+  float: left;
+  /*padding: 15px;*/
+  padding-left:0px; 
+  padding-top:0px;
+  padding-right:0px;
+  padding-bottom:0px; 
+  /* border: 1px solid red;*/
+}
+.main {
+  width: 54%;
+  float: left;
+  padding: 15px;
+  /*border: 1px solid red;*/
+}
+
+
+/*para el scroll*/
+
+
+div.scroll_vertical {
+  height: 665px;
+  width: 443px;
+  overflow: auto;
+  background-color: transparent;
+  padding: 8px;
+  opacity:0.9;
+}
+
+
+
+/*drown menu*/
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 28px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #333;
+  white-space: nowrap;
+}
+
+/*boton banear*/
+
+
+
+.buttones {
+  background-color: #FFFFFF; /* blanco*/
+  border: none;
+  color: white;
+  /*padding: 16px 32px;*/
+  border-radius:10px; 
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+
+
+.buttones1 {
+  background-color:#FFFFFF; 
+  color: white; 
+  border: 1px solid #FFFFFF;
+}
+
+.buttones1:hover {
+  background-color: #FCDEDE;
+  color: white;
+}
+
+/*quitar scroll pagina*/
+html,body { 
+  overflow:hidden; 
+}
+
+/*para el marcador*/
+
+
+/*
+.gm-style-iw {
+    width: 350px !important;
+    top: 15px !important;
+    left: 0px !important;
+    background-color: #fff;
+    box-shadow: 0 1px 6px rgba(178, 178, 178, 0.6);
+    border: 1px solid rgba(72, 181, 233, 0.6);
+    border-radius: 2px 2px 10px 10px;
+}
+
+
+
+#iw-container {
+    margin-bottom: 10px;
+}
+#iw-container .iw-title {
+    font-family: 'Open Sans Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    padding: 10px;
+    background-color: #48b5e9;
+    color: white;
+    margin: 0;
+    border-radius: 2px 2px 0 0;
+}
+#iw-container .iw-content {
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 400;
+    margin-right: 1px;
+    padding: 15px 5px 20px 15px;
+    max-height: 140px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.iw-content img {
+    float: right;
+    margin: 0 5px 5px 10px; 
+}
+.iw-subTitle {
+    font-size: 16px;
+    font-weight: 700;
+    padding: 5px 0;
+}
+.iw-bottom-gradient {
+    position: absolute;
+    width: 326px;
+    height: 25px;
+    bottom: 10px;
+    right: 18px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+    background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+    background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+    background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+}
+
+*/
+
+.circular {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  overflow:hidden;
+}
+
+ #markerLayer img {
+        border: 2px solid red !important;
+        width: 85% !important;
+        height: 90% !important;
+        border-radius: 50%;
+      }

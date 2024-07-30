@@ -1,0 +1,769 @@
+<!-- link calendar resources -->
+<style>
+    .hover-shadow {
+        -webkit-box-shadow: 0 0 0 0 rgba(191,191,191,1);
+        -moz-box-shadow: 0 0 0 0 rgba(191,191,191,1);
+        box-shadow: 0 0 0 0 rgba(191,191,191,1);
+        transition: 400ms;
+        cursor: pointer;
+    }
+    .hover-shadow:hover {-webkit-box-shadow: 0 0 13px 0 rgba(36,167,255,1);
+        -moz-box-shadow: 0 0 13px 0 rgba(36,167,255,1);
+        box-shadow: 0 0 13px 0 rgba(36,167,255,1);
+    }
+    .hover-border {
+        border: solid 0.8px  rgba(36,167,255,0);
+        transition: 50ms;
+        cursor: pointer;
+    }
+    .hover-border:hover {
+        border: solid 0.8px #18abff;
+    }
+</style>
+<header>
+    <div class="col-xs-12 shadow-2-light padding-10">
+        <div class="col-xs-12 remove-padding">
+            <?php
+            echo $this->tag->form(
+                array(
+                    "action" => "emergency/allEmergency","method" => "post", "id" => "form"
+                )
+            ); ?>
+                <div class="col-md-2">
+                    <input type="text" class="input-ge" name="direccion"  id="direccion"  placeholder="Dirección"  />
+                </div>
+                <div class="col-md-2">
+                    <input type="text" class="input-ge" name="emergencia"  id="emergencia"  placeholder="Emergencia"  />
+                </div>
+                <div class="col-md-2">
+                    <input type="text" class="input-ge" name="fecha"  id="fecha"  placeholder="Fecha"  />
+                </div>
+                <div class="col-md-2">
+                    <input type="text" class="input-ge" name="id_admin"  id="id_admin"  placeholder="Id admin"  />
+                </div>
+                <div class="col-md-2 center">
+                    <button type="submit" class="btn-outline rounded"> Buscar datos</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</header>
+
+<div class="col-md-6">
+    <div class="col-md-10 col-md-offset-1 push-50-top text-white">
+        <div class="col-md-6">
+            <div class="col-xs-12 padding-20 center">
+                <h1><?=count($allEmergency)?></h1>
+                <small>Total de emergencias</small>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-xs-12 padding-20 center">
+                <h5><?=$allEmergency[count($allEmergency) - 1]['date']?> <br>
+                <?=$allEmergency[count($allEmergency) - 1]['emergency']?></h5>
+                <small>Ultima emergencia <br> <button class="btn rounded btn-info btn-sm" onclick="document.getElementById('emergency_<?=count($allEmergency) - 1?>').click();">Ver detalles</button> </small>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 center text-white">
+        <h2>Ultimas 5 emergencias</h2>
+        <?php if(count($allEmergency) < 5){
+            for ($i = 0; $i < count($allEmergency); $i++) { ?>
+                <div class="col-xs-12 push-15-top wow fadeInLeft" data-wow-delay="0.<?= $i ?>s">
+                    <div class="absolute opacity-8 bg-black shadow-4 col-xs-12 heightx100"></div>
+                    <div class="col-xs-12 padding-10">
+                        <div class="col-md-3">
+                            <?=$allEmergency[$i]['date']?>
+                            <?=$allEmergency[$i]['hour']?>
+                        </div>
+                        <div class="col-md-3">
+                            <?=$allEmergency[$i]['emergency']?>
+                        </div>
+                        <div class="col-md-5">
+                            <?=$allEmergency[$i]['direction']?>
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn btn-sm rounded btn-primary" onclick="document.getElementById('emergency_<?=$i?>').click();"><span class="fa fa-search-plus"></span></button>
+                        </div>
+                    </div>
+                </div>
+            <?php }   ?>
+        <?php } else{
+        for ($i = 0; $i < 5; $i++) { ?>
+            <div class="col-xs-12 push-15-top wow fadeInLeft" data-wow-delay="0.<?= $i ?>s">
+                <div class="absolute opacity-8 bg-black shadow-4 col-xs-12 heightx100"></div>
+                <div class="col-xs-12 padding-10">
+                    <div class="col-md-3">
+                        <?=$allEmergency[$i]['date']?>
+                        <?=$allEmergency[$i]['hour']?>
+                    </div>
+                    <div class="col-md-3">
+                        <?=$allEmergency[$i]['emergency']?>
+                    </div>
+                    <div class="col-md-5">
+                        <?=$allEmergency[$i]['direction']?>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-sm rounded btn-primary" onclick="document.getElementById('emergency_<?=$i?>').click();"><span class="fa fa-search-plus"></span></button>
+                    </div>
+                </div>
+            </div>
+        <?php } } ?>
+    </div>
+</div>
+<div class="col-md-6 col-xs-12 center">
+    <div class="pull-right resplandor-ge push-100-top " id="div-map">
+        <div id="map" class="pull-right col-xs-12 wow zoomIn"></div>
+    </div>
+</div>
+<div class="col-xs-12 push-50-top">
+    <div class="col-xs-12 remove-padding" id="div_emergencia">
+        <div class="center text-white text-shadow"><h2>Todas las emergencias</h2></div>
+    <?php if (isset($allEmergency)) { ?>
+        <?php if (count($allEmergency) >= 0) { ?>
+            <?php $dateInit = ""; ?>
+            <?php for ($i = 0; $i < count($allEmergency); $i++) { ?>
+
+                <?php
+                if($dateInit != $allEmergency[$i]['date']){
+                    $dateInit = $allEmergency[$i]['date'];
+                    echo "<div class='col-xs-12 text-white wow fadeInDown push-40-top padding-10 h4' data-wow-delay='0.<?= $i ?>s'><span class='rounded padding-10 bg-blue push-15-left'>" . $dateInit . " </span></div>";
+                    ?>
+        <a name="emergency_<?= $i ?>">
+        <div class="col-xs-2 remove-padding push-5-top text-white push-20-left hover-border remove-padding wow flipInX" data-wow-delay="0.<?= $i ?>s" data-toggle="modal" data-target="#emergency" id="emergency_<?= $i ?>" onclick="infoEmergencyModal('<?=$i?>');">
+            <div class="absolute opacity-8 bg-black shadow-4 col-xs-12 heightx100"></div>
+            <div class="col-md-12 remove-padding">
+                <div class="col-xs-12 remove-padding">
+                    <div class="col-md-12">
+                        <p><?php echo $allEmergency[$i]['emergency']; ?></p>
+                    </div>
+                    <input type="hidden" value="<?= $allEmergency[$i]['direction']; ?>" id="direction<?=$i?>">
+                    <input type="hidden" value="<?= $allEmergency[$i]['emergency']; ?>" id="emergency<?=$i?>">
+                    <input type="hidden" value="<?= $allEmergency[$i]['polares']; ?>" id="polares<?=$i?>">
+                    <input type="hidden" value="<?= $allEmergency[$i]['date']; ?>" id="date<?=$i?>">
+                    <input type="hidden" value="<?= $allEmergency[$i]['hour']; ?>" id="hour<?=$i?>">
+                    <input type="hidden" value="<?= $allEmergency[$i]['status']; ?>" id="status<?=$i?>">
+                    <input type="hidden" value="<?= $allEmergency[$i]['iduser']; ?>" id="iduser<?=$i?>">
+                    <input type="hidden" value="<?= $allEmergency[$i]['idadmin']; ?>" id="idadmin<?=$i?>">
+                    <input type="hidden" value="<?= $allEmergency[$i]['auxAdmin']; ?>" id="auxAdmin<?=$i?>">
+                </div>
+            </div>
+        </div>
+        </a>
+            <?php
+                } else {
+                    ?>
+                    <a name="emergency_<?= $i ?>">
+                        <div class="col-xs-2 remove-padding push-5-top text-white push-20-left hover-border remove-padding wow flipInX" data-wow-delay="0.<?= $i ?>s" data-toggle="modal" data-target="#emergency" id="emergency_<?= $i ?>" onclick="infoEmergencyModal('<?=$i?>');">
+                            <div class="absolute opacity-8 bg-black shadow-4 col-xs-12 heightx100"></div>
+                            <div class="col-md-12 remove-padding">
+                                <div class="col-xs-12 remove-padding">
+                                    <div class="col-md-12">
+                                        <p><?php echo $allEmergency[$i]['emergency']; ?></p>
+                                    </div>
+                                    <input type="hidden" value="<?= $allEmergency[$i]['direction']; ?>" id="direction<?=$i?>">
+                                    <input type="hidden" value="<?= $allEmergency[$i]['location']; ?>" id="location<?=$i?>">
+                                    <input type="hidden" value="<?= $allEmergency[$i]['emergency']; ?>" id="emergency<?=$i?>">
+                                    <input type="hidden" value="<?= $allEmergency[$i]['polares']; ?>" id="polares<?=$i?>">
+                                    <input type="hidden" value="<?= $allEmergency[$i]['date']; ?>" id="date<?=$i?>">
+                                    <input type="hidden" value="<?= $allEmergency[$i]['hour']; ?>" id="hour<?=$i?>">
+                                    <input type="hidden" value="<?= $allEmergency[$i]['status']; ?>" id="status<?=$i?>">
+                                    <input type="hidden" value="<?= $allEmergency[$i]['iduser']; ?>" id="iduser<?=$i?>">
+                                    <input type="hidden" value="<?= $allEmergency[$i]['idadmin']; ?>" id="idadmin<?=$i?>">
+                                    <input type="hidden" value="<?= $allEmergency[$i]['auxAdmin']; ?>" id="auxAdmin<?=$i?>">
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <?php
+                }
+                ?>
+            <?php }; ?>
+        <?php } ?>
+    <?php } ?>
+    </div>
+</div>
+<script>
+</script>
+<!-- Modal -->
+<div class="modal fade" id="emergency" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-asphalt text-white">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Descripción de emergencia</h4>
+            </div>
+            <div class="modal-body remove-padding overflow-hidden">
+                <div class="col-md-4 height-300 remove-padding" id="mapEmergency">
+                    <div id="map_emergency" class="col-xs-12 remove-padding heightx100"></div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                    <div class="col-md-4 push-15-top"><b>Dirección </b> <br><span id="direction_modal"></span> </div>
+                    <div class="col-md-4 push-15-top"><b>Unicación </b> <br><span id="location_modal"></span> </div>
+                    <div class="col-md-4 push-15-top"><b>Emergencia </b> <br><span id="emergency_modal"></span> </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-md-4 push-15-top"><b>Polares </b> <br><span id="polares_modal"></span> </div>
+                    <div class="col-md-4 push-15-top"><b>Fecha</b> <br><span id="date_modal"></span> </div>
+                    <div class="col-md-4 push-15-top"><b>Hora</b> <br><span id="hour_modal"></span> </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-md-3 push-15-top"><b>Estado</b> <br><span id="status_modal"></span> </div>
+
+                    <div class="col-md-3 push-15-top"><b>Id usuario </b> <br>
+                        <?php
+                        echo $this->tag->form(
+                            array(
+                                "action" => "user-adm", "method" => "post", "id" => "form"
+                            )
+                        ); ?>
+                        <input type="hidden" name="idUser" id="idFilterUser" value="" />
+                        <input type="hidden" name="name" id="nameFilter" value=""/>
+                        <input type="hidden" name="location" id="locationFilter" value=""/>
+                        <input type="hidden" name="phone" id="phoneFilter" value=""/>
+                        <input type="hidden" name="email" id="emailFilter"  value=""/>
+                        <input type="hidden" name="status" id="statusFilter" value=""/>
+                        <button type="submit" class="btn rounded btn-primary"><span id="iduser_modal"></span></button>
+                        </form>
+                    </div>
+                    <div class="col-md-3 push-15-top"><b>ID administrador </b> <br>
+                        <?php
+                        echo $this->tag->form(
+                            array(
+                                "action" => "principal", "method" => "post", "id" => "form"
+                            )
+                        ); ?>
+                        <input type="hidden" name="idAdmin" id="idFilter" value="" />
+                        <input type="hidden" name="name" id="nameFilter" value="" />
+                        <input type="hidden" name="city" id="cityFilter" value="" />
+                        <input type="hidden" name="phone" id="phoneFilter" value="" />
+                        <input type="hidden" name="email" id="emailFilter" value="" />
+                        <input type="hidden" name="ocupation" id="ocupationFilter" value="" />
+                        <button type="submit" class="btn rounded btn-primary"> <span id="idadmin_modal"></span></button>
+                        </form>
+                         </div>
+                        <div class="col-md-3 push-15-top"><b>Aux Administrador </b> <br><span id="auxAdmin_modal"></span> </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="col-xs-12 push-20-top center">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var listamarkers = [];
+    var map_emergency = 1;
+    function initMap(lng_emergency, lat_emergency) {
+        var uluru = {lat: 4.531702, lng: -75.674658};
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: uluru,
+            styles:[
+                {
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#212121"
+                        }
+                    ]
+                },
+                {
+                    "elementType": "labels.icon",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#757575"
+                        }
+                    ]
+                },
+                {
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#212121"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#757575"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.country",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#9e9e9e"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.land_parcel",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.locality",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#bdbdbd"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#757575"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#181818"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#616161"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#1b1b1b"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "geometry.fill",
+                    "stylers": [
+                        {
+                            "color": "#2c2c2c"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#8a8a8a"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.arterial",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#373737"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.highway",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#3c3c3c"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.highway.controlled_access",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#4e4e4e"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.local",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#616161"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "transit",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#757575"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "water",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#000000"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "water",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#3d3d3d"
+                        }
+                    ]
+                }
+            ],
+            fullscreenControl: true,
+            streetViewControl: true,
+            mapTypeControl: true,
+            fullscreenControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER
+            },
+            streetViewControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER
+            },
+            mapTypeControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER
+            }
+        });
+        var map_emergency = new google.maps.Map(document.getElementById('map_emergency'), {
+            zoom: 10,
+            center:  {lat: parseFloat(lat_emergency), lng: parseFloat(lng_emergency)},
+            styles:[
+                {
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#212121"
+                        }
+                    ]
+                },
+                {
+                    "elementType": "labels.icon",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#757575"
+                        }
+                    ]
+                },
+                {
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#212121"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#757575"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.country",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#9e9e9e"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.land_parcel",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "administrative.locality",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#bdbdbd"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#757575"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#181818"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#616161"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "poi.park",
+                    "elementType": "labels.text.stroke",
+                    "stylers": [
+                        {
+                            "color": "#1b1b1b"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "geometry.fill",
+                    "stylers": [
+                        {
+                            "color": "#2c2c2c"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#8a8a8a"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.arterial",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#373737"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.highway",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#3c3c3c"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.highway.controlled_access",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#4e4e4e"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "road.local",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#616161"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "transit",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#757575"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "water",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "color": "#000000"
+                        }
+                    ]
+                },
+                {
+                    "featureType": "water",
+                    "elementType": "labels.text.fill",
+                    "stylers": [
+                        {
+                            "color": "#3d3d3d"
+                        }
+                    ]
+                }
+            ],
+            fullscreenControl: true,
+            streetViewControl: true,
+            zoomControl: false,
+            mapTypeControl: true,
+            fullscreenControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER
+            },
+            streetViewControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER
+            },
+            mapTypeControlOptions: {
+                position: google.maps.ControlPosition.TOP_CENTER
+            }
+        });
+        var marker = new google.maps.Marker({
+          position: {lat: parseFloat(lat_emergency), lng: parseFloat(lng_emergency)},
+          map: map_emergency
+        });
+        $.ajax({
+            url: 'allEmergencyAjax',
+            type: 'get',
+            success: function (response) {
+                obj = JSON.parse(response);
+                list = obj.data;
+                console.log(obj.data);
+                for (var i = 0; i < list.length; i++) {
+
+                    console.log(list[i]['location']);
+
+                    var image =
+                        {
+                            url: '<?= PAYCORES_HOST_NAME ?>img/marker_danger.png',
+                            origin: new google.maps.Point(0, 0)
+                        };
+
+                    var location = list[i]['location'].split(" ");
+                    console.log(location[0]);
+                    console.log(location[1]);
+
+                    var latLng = new google.maps.LatLng(location[0], location[1]);
+
+                    var marker = new google.maps.Marker({
+                        position: latLng,
+                        map: map,
+                        visible: true,
+                        icon: image,
+                        clickable: true,
+                        id: i,
+                        animation: google.maps.Animation.DROP
+                    });
+
+                    var info = new google.maps.InfoWindow();
+
+                    var content = '<div style="height:100px !important;width:200px;">' + list[i]["userName"] +
+                         list[i]["phone"] +
+                         list[i]["placa"] +
+                         list[i]["direction"] +
+                         list[i]["date"] +
+                         list[i]["polares"] + i + '<button class="btnb tn-sm rounded" onclick=" document.getElementById(\'emergency_' + i +'\').click();">Abrir</button></div>';
+
+                    if (list[i]['estado'] == "Sin atender") {
+                        var circle = new google.maps.Circle({
+                            map: map,
+                            center: new google.maps.LatLng(location[0], location[1]),
+                            radius: 30,
+                            strokeColor: "#ff7365",
+                            fillColor: "red",
+                            editable: false
+                        });
+                        contadorsinatender++;
+                    }
+                    else {
+                        var circle = new google.maps.Circle({
+                            map: map,
+                            center: new google.maps.LatLng(location[0], location[1]),
+                            radius: 30,
+                            strokeColor: "#00e3a0",
+                            fillColor: "green",
+                            editable: false
+                        });
+                        google.maps.event.addListener(marker, 'click', (function (marker, content, info) {
+                            return function () {
+                                document.getElementById('emergency_' + marker.get("id")).click();
+                                info.open(map, marker);
+                            };
+                        })(marker, info));
+                    }
+                }
+            }
+        });
+    }
+    function infoEmergencyModal(id) {
+        var location = document.getElementById('location' + id).value.split(" ");
+        document.getElementById('direction_modal').innerHTML = document.getElementById('direction' + id).value;
+        document.getElementById('emergency_modal').innerHTML = document.getElementById('emergency' + id).value;
+        document.getElementById('polares_modal').innerHTML = document.getElementById('polares' + id).value;
+        document.getElementById('date_modal').innerHTML = document.getElementById('date' + id).value;
+        document.getElementById('hour_modal').innerHTML = document.getElementById('hour' + id).value;
+        if(document.getElementById('status' + id).value == 0){
+            document.getElementById('status_modal').innerHTML = "Atendida";
+        }else{
+            document.getElementById('status_modal').innerHTML = "No atendida";
+        }
+        /*document.getElementById('status_modal').innerHTML = document.getElementById('status' + id).value;*/
+        document.getElementById('idFilter').value = document.getElementById('idadmin' + id).value;
+        document.getElementById('idFilterUser').value = document.getElementById('iduser' + id).value;
+        document.getElementById('iduser_modal').innerHTML = document.getElementById('iduser' + id).value;
+        document.getElementById('idadmin_modal').innerHTML = document.getElementById('idadmin' + id).value;
+        document.getElementById('auxAdmin_modal').innerHTML = document.getElementById('auxAdmin' + id).value;
+        initMap(location[1], location[0]);
+    }
+</script>
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApG5XlUDnYYXi4pKkv2_ucfx_kZZqAaWw&callback=initMap">
+</script>
