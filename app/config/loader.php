@@ -1,14 +1,14 @@
 <?php
 
-use Phalcon\Loader;
+$loader = new \Phalcon\Loader();
 
-$loader = new Loader();
-
-$loader->registerNamespaces(
+/**
+ * We're a registering a set of directories taken from the configuration file
+ */
+$loader->registerDirs(
     [
-        'App\Controllers' => APP_PATH . '/controllers/',
-        'App\Models'      => APP_PATH . '/models/',
-    ]
-);
+        $config->application->controllersDir,
+        $config->application->modelsDir,
 
-$loader->register();
+    ]
+)->register();
