@@ -1,5 +1,7 @@
 <?php
 
+use Phalcon\Mvc\Controller;
+
 class ReportespdfController extends \Phalcon\Mvc\Controller
 {
 
