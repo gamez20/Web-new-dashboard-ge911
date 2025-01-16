@@ -1,0 +1,20 @@
+{
+    "name": "kevyn/web-new-dashboard-ge911",
+    "require-dev": {
+        "phalcon/devtools": "3.4.5",
+        "phalcon/ide-stubs": "3.4.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kevyn\\WebNewDashboardGe911\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "KevynGg",
+            "email": "kevyngallego542@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require-": {}
+}
