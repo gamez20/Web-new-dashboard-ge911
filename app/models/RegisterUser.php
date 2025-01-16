@@ -13,7 +13,7 @@ class RegisterUser extends \Phalcon\Mvc\Model
     {
         $this->setSchema("admin");
     }
-    public function getSource()
+    public function getSource(): string
     {
         return 'register_user';
     }
