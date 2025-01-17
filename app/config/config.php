@@ -10,13 +10,16 @@ defined('APP_PATH') || define('APP_PATH', BASE_PATH . '/app');
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+// Configurar el log de errores
+ini_set('log_errors', 1);
+ini_set('error_log', BASE_PATH . '/logs/error.log');
 
 return new \Phalcon\Config([
     'database' => [
         'adapter'     => 'Mysql',
         'host'        => 'localhost',
         'username'    => 'root',
-        'password'    => '123456',
+        'password'    => '',
         'dbname'      => 'admin',
         'charset'     => 'utf8',
     ],
@@ -38,6 +41,6 @@ return new \Phalcon\Config([
         // This allows the baseUri to be understand project paths that are not in the root directory
         // of the webpspace.  This will break if the public/index.php entry point is moved or
         // possibly if the web server rewrite rules are changed. This can also be set to a static path.
-        'baseUri'        => preg_replace('/public([\/\\\\])index.php$/', '', $_SERVER["PHP_SELF"]),
+        'baseUri'        => '/',
     ]
 ]);

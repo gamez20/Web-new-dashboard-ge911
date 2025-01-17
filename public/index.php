@@ -11,7 +11,7 @@ error_reporting(E_ALL);
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
 define('IS_LOCAL', true);
-define('PAYCORES_HOST_NAME', IS_LOCAL ? "http://localhost/GE911/" : "https://ge911.com/");
+define('PAYCORES_HOST_NAME', IS_LOCAL ? "http://localhost:8000/" : "https://ge911.com/");
 define('PAYCORES_ATTACHMENTS', IS_LOCAL ? "paycores-01" : "ubuntu");
 define('FIREBASE_API_KEY', 'AAAAQQhJj7g:APA91bFtb4kjkr30Xxi1SILGPrHvFkRbzRBTvwDHU_0DTU4NSM4eY-R1wbiF34tx1v5YwFI2nrrOPmUrr23aY3v-TSaA6ojGo0drjBuP-_KRxDqb6amf5E3Xqo0QgraqsCKIxYvcZQam');
 

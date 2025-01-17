@@ -33,6 +33,8 @@ class AdminController extends \Phalcon\Mvc\Controller
     private function existuserLogin($email,$password){
         $salt = '1234567890abcdefghijklmnopqrstuvwxyz!#$%&/=?¿@';
         $passEnd = md5($salt . $password);
+        echo $passEnd;
+        die();
         $phone_exist = TbAdminPanel::query()
             ->where('password = :password: AND email=:email:',
                 array('password' => $passEnd,'email'=>$email))

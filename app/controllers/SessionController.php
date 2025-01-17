@@ -10,16 +10,28 @@ class SessionController extends \Phalcon\Mvc\Controller
     public function startAction()
     {
         if ($this->request->isPost()) {
-            // Get the data from the user
-            $email = $this->request->getPost('email');
-            $password  = $this->request->getPost('password');
-            // Find the user in the database
-            $force = new AdminController();
-            $exist = $force->loginDashboard($email,$password);
-            if ($exist) {
-                $this->initSession($email);
-                return $this->response->redirect('principal');
-            }else{
+            try {
+                // Get the data from the user
+                $email = $this->request->getPost('email');
+                $password = $this->request->getPost('password');
+                
+                error_log("Intento de login - Email: " . $email);
+                
+                // Find the user in the database
+                $force = new AdminController();
+                $exist = $force->loginDashboard($email,$password);
+                
+                if ($exist) {
+                    error_log("Login exitoso para el usuario: " . $email);
+                    $this->initSession($email);
+                    return $this->response->redirect('principal');
+                } else {
+                    error_log("Login fallido para el usuario: " . $email);
+                    echo "no existe";
+                    die();
+                }
+            } catch (Exception $e) {
+                error_log("Error en login: " . $e->getMessage());
                 return $this->response->redirect('');
             }
         }
